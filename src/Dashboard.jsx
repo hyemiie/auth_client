@@ -1,6 +1,6 @@
 import { LogOutIcon, ShieldIcon } from "lucide-react";
 import { useAuth } from "./hooks/useAuth";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = ({ email, loading, authLabels = [], setupMFA }) => {
@@ -20,8 +20,8 @@ const Dashboard = ({ email, loading, authLabels = [], setupMFA }) => {
     return <div>Loading dashboard...</div>;
   }
 
-  const resolvedAuthLabels =
-    authLabels.length > 0 ? authLabels : ["Google OAuth"];
+  // const resolvedAuthLabels =
+  //   authLabels.length > 0 ? authLabels : ["Google OAuth"];
 
  return (
       <div className="dashboard-container">

@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../hooks/useAuth";
 
 function AuthCallback() {
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
   const navigate = useNavigate();
   const hasProcessed = useRef(false);
 
