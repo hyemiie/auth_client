@@ -534,7 +534,6 @@ if (jwtUser) authLabels.push("JWT Auth");
     );
   }
 
-<<<<<<< HEAD
 if (view === 'dashboard') {
   return (
     <Dashboard
@@ -548,88 +547,6 @@ if (view === 'dashboard') {
   );
 }
 
-=======
-  if (view === 'dashboard') {
-    return (
-      <div className="dashboard-container">
-        <div className="dashboard-card">
-          <div className="dashboard-header">
-            <div>
-              <h1>Dashboard</h1>
-              <p className="subtitle">Welcome back, {user?.email || email}!</p>
-            </div>
-            <button onClick={handleLogout} className="btn btn-danger">
-              <LogOutIcon />
-              Logout
-            </button>
-          </div>
-
-          {/* <div className="success-box">
-            <div className="success-box-header">
-              <CheckCircleIcon />
-              <h2>Authentication Successful!</h2>
-            </div>
-            <p>
-              You've successfully authenticated using {user ? 'Google OAuth' : 'JWT'}. 
-              Your session is secure and protected.
-            </p>
-          </div> */}
-
-          <div className="grid">
-            <div className="info-card">
-              <h3>Your Details</h3>
-              <div className="info-item">
-                <div className="info-label">Email:</div>
-                <div className="info-value">{user?.email || email}</div>
-              </div>
-              <div className="info-item">
-                <div className="info-label">Auth Method:</div>
-                <div className="info-value">
-<span>
-  {authLabels.length > 0 ? authLabels.join(" + ") : "Unknown Auth"}
-</span>
-
-                </div>
-              </div>
-              {user?.username && (
-                <div className="info-item">
-                  <div className="info-label">Name:</div>
-                  <div className="info-value">{user.username}</div>
-                </div>
-              )}
-            </div>
-
-            <div className="info-card">
-              <h3>Security</h3>
-              <button
-                onClick={setupMFA}
-                disabled={loading}
-                className="btn btn-primary"
-              >
-                <ShieldIcon />
-                {loading ? 'Setting up...' : 'Setup 2FA (TOTP)'}
-              </button>
-              <p className="input-hint" style={{textAlign: 'center', marginTop: '0.5rem'}}>
-                Add an extra layer of security
-              </p>
-            </div>
-          </div>
-
-          <div className="features-box">
-            <h4>Authentication Features Demonstrated:</h4>
-            <ul>
-              <li>✓ JWT-based authentication</li>
-              <li>✓ Google OAuth 2.0 integration</li>
-              <li>✓ TOTP (Time-based One-Time Password) 2FA</li>
-              <li>✓ Secure password hashing with bcrypt</li>
-              <li>✓ Token-based session management</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    );
-  }
->>>>>>> 79deb78ce7686346b904ef334342370a0cbeef23
 
   return null;
 }
