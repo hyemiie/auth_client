@@ -71,8 +71,8 @@ function App() {
   const [name, setName] = useState('');
   const [mfaCode, setMfaCode] = useState('');
   const [qrCode, setQrCode] = useState('');
-  const [secret, setSecret] = useState('');
-  const [token, setToken] = useState('');
+  // const [secret, setSecret] = useState('');
+  // const [token, setToken] = useState('');
   // const [user, setUser] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -125,7 +125,7 @@ const handleLogin = async () => {
     console.log("first data", data.status);
 
     if (data.status === "success") {
-      setToken(data.token);
+      // setToken(data.token);
 
       const user = await getUser(); 
       console.log("user", user);
@@ -199,7 +199,7 @@ const getUser = async () => {
 
       if (data.status === 'success') {
         setQrCode(data.qr_code);
-        setSecret(data.secret);
+        // setSecret(data.secret);
         setView('mfa-setup');
       } else {
         setError('Failed to setup MFA');
