@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './auth.css';
+import Dashboard from './Dashboard';
+import { useAuth } from "./hooks/useAuth";
 
 const API_BASE_URL = 'https://authentication-system-3it4.onrender.com';
 
@@ -71,13 +73,14 @@ function App() {
   const [qrCode, setQrCode] = useState('');
   const [secret, setSecret] = useState('');
   const [token, setToken] = useState('');
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [jwtUser, setJWTUser] = useState(false);
   const [googleUser, setGoogleUser] = useState(false);
   const [MfaUser, setMfaUser] = useState(false);
+const { user, login, logout } = useAuth();
 
   const handleSignup = async () => {
     setError('');
@@ -106,51 +109,53 @@ function App() {
     }
   };
 
-  const handleLogin = async () => {
-    setError('');
-    setSuccess('');
-    setLoading(true);
+const handleLogin = async () => {
+  setError('');
+  setSuccess('');
+  setLoading(true);
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+  try {
+    const response = await fetch(`${API_BASE_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
 
-      const data = await response.json();
+    const data = await response.json();
+    console.log("first data", data.status);
 
-      getUser();
+    if (data.status === "success") {
+      setToken(data.token);
 
-      if (data.status === 'success') {
-        setToken(data.token);
-        
-        if (data.mfa_enabled) {
-          setView('mfa-verify');
-        } else {
-          setSuccess('Login successful!');
-          setView('dashboard');
-        }
-      } else {
-        setError(data.message || 'Login failed');
+      const user = await getUser(); 
+      console.log("user", user);
+
+      if (user) {
+        login(user); 
       }
-    } catch (err) {
-      setError('Network error. Make sure your API is running on port 8000.');
-    } finally {
-      setLoading(false);
+
+      if (user?.mfa_enabled) {
+        setView("mfa-verify");
+      } else {
+        setView("dashboard");
+      }
+    } else {
+      setError(data.message || 'Login failed');
     }
-  };
+  } catch (err) {
+    setError('Network error. Make sure your API is running on port 8000.');
+  } finally {
+    setLoading(false);
+  }
+};
 
 
 
-  const getUser = async () => {
+const getUser = async () => {
   try {
     const response = await fetch(
       `${API_BASE_URL}/user/${encodeURIComponent(email)}`,
-      {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      }
+      { method: 'GET', headers: { 'Content-Type': 'application/json' } }
     );
 
     if (!response.ok) {
@@ -162,20 +167,14 @@ function App() {
 
     const user = data.user;
 
-    if (user.mfa_enabled) {
-      setMfaUser(true);
-    }
+    if (user.mfa_enabled) setMfaUser(true);
+    if (user.is_google_user) setGoogleUser(true);
+    if (!user.is_google_user) setJWTUser(true);
 
-    if (user.is_google_user) {
-      setGoogleUser(true);
-    }
-
-    if (!user.is_google_user) {
-      setJWTUser(true);
-    }
-
+    return user; // ✅ return it
   } catch (error) {
     console.error('Failed to fetch user:', error.message);
+    return null; 
   }
 };
 
@@ -240,14 +239,11 @@ function App() {
   };
 
 
-  const handleLogout = () => {
-    setToken('');
-    setUser(null);
-    setView('login');
-    setEmail('');
-    setPassword('');
-    setName('');
-  };
+ const handleLogout = () => {
+    logout();
+  setView("login");
+};
+
 
   const authLabels = [];
 
@@ -538,86 +534,19 @@ if (jwtUser) authLabels.push("JWT Auth");
     );
   }
 
-  if (view === 'dashboard') {
-    return (
-      <div className="dashboard-container">
-        <div className="dashboard-card">
-          <div className="dashboard-header">
-            <div>
-              <h1>Dashboard</h1>
-              <p className="subtitle">Welcome back, {user?.email || email}!</p>
-            </div>
-            <button onClick={handleLogout} className="btn btn-danger">
-              <LogOutIcon />
-              Logout
-            </button>
-          </div>
+if (view === 'dashboard') {
+  return (
+    <Dashboard
+      user={user}
+      email={email}
+      handleLogout={handleLogout}
+      loading={loading}
+      authLabels={authLabels}
+      setupMFA={setupMFA}
+    />
+  );
+}
 
-          {/* <div className="success-box">
-            <div className="success-box-header">
-              <CheckCircleIcon />
-              <h2>Authentication Successful!</h2>
-            </div>
-            <p>
-              You've successfully authenticated using {user ? 'Google OAuth' : 'JWT'}. 
-              Your session is secure and protected.
-            </p>
-          </div> */}
-
-          <div className="grid">
-            <div className="info-card">
-              <h3>Your Details</h3>
-              <div className="info-item">
-                <div className="info-label">Email:</div>
-                <div className="info-value">{user?.email || email}</div>
-              </div>
-              <div className="info-item">
-                <div className="info-label">Auth Method:</div>
-                <div className="info-value">
-<span>
-  {authLabels.length > 0 ? authLabels.join(" + ") : "Unknown Auth"}
-</span>
-
-                </div>
-              </div>
-              {user?.username && (
-                <div className="info-item">
-                  <div className="info-label">Name:</div>
-                  <div className="info-value">{user.username}</div>
-                </div>
-              )}
-            </div>
-
-            <div className="info-card">
-              <h3>Security</h3>
-              <button
-                onClick={setupMFA}
-                disabled={loading}
-                className="btn btn-primary"
-              >
-                <ShieldIcon />
-                {loading ? 'Setting up...' : 'Setup 2FA (TOTP)'}
-              </button>
-              <p className="input-hint" style={{textAlign: 'center', marginTop: '0.5rem'}}>
-                Add an extra layer of security
-              </p>
-            </div>
-          </div>
-
-          <div className="features-box">
-            <h4>Authentication Features Demonstrated:</h4>
-            <ul>
-              <li>✓ JWT-based authentication</li>
-              <li>✓ Google OAuth 2.0 integration</li>
-              <li>✓ TOTP (Time-based One-Time Password) 2FA</li>
-              <li>✓ Secure password hashing with bcrypt</li>
-              <li>✓ Token-based session management</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return null;
 }
