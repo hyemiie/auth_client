@@ -95,3 +95,4 @@ const Dashboard = ({ email, loading, authLabels = [], setupMFA }) => {
 }
 
 export default Dashboard
+
