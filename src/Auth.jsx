@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import './auth.css';
-<<<<<<< HEAD
 import Dashboard from './Dashboard';
 import { useAuth } from "./hooks/useAuth";
-=======
->>>>>>> 79deb78ce7686346b904ef334342370a0cbeef23
 
 const API_BASE_URL = 'https://authentication-system-3it4.onrender.com';
 
