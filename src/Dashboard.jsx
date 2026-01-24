@@ -20,8 +20,8 @@ const Dashboard = ({ email, loading, authLabels = [], setupMFA }) => {
     return <div>Loading dashboard...</div>;
   }
 
-  // const resolvedAuthLabels =
-  //   authLabels.length > 0 ? authLabels : ["Google OAuth"];
+  const resolvedAuthLabels =
+    authLabels.length > 0 ? authLabels : ["Google OAuth"];
 
  return (
       <div className="dashboard-container">
@@ -50,7 +50,7 @@ const Dashboard = ({ email, loading, authLabels = [], setupMFA }) => {
                 <div className="info-label">Auth Method:</div>
                 <div className="info-value">
 <span>
-  {authLabels.length > 0 ? authLabels.join(" + ") : "Unknown Auth"}
+  {resolvedAuthLabels.length > 0 ? resolvedAuthLabels.join(" + ") : "Auth"}
 </span>
 
                 </div>

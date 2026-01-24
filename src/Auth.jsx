@@ -3,7 +3,8 @@ import './auth.css';
 import Dashboard from './Dashboard';
 import { useAuth } from "./hooks/useAuth";
 
-const API_BASE_URL = 'https://authentication-system-3it4.onrender.com';
+// const API_BASE_URL = 'https://authentication-system-3it4.onrender.com';
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
 const ShieldIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
